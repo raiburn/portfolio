@@ -85,6 +85,7 @@ export const projects: Project[] = [
       "Tell it your budget and the games you play, and it generates a compatible PC build with FPS estimates. 28,780 lines across 198 files, built and maintained solo.",
     stack: ["Next.js", "Prisma", "PostgreSQL", "OpenAI API"],
     href: "https://buildmyrig.dev",
+    image: "/projects/buildmyrig.jpg",
   },
   {
     name: "ECommerce ChatBot",

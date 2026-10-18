@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Fragment } from "react";
 import { about, experience, profile, projects } from "@/data/site";
+import { AskOscar } from "@/components/AskOscar";
 import { SectionNav } from "@/components/SectionNav";
 import { Spotlight } from "@/components/Spotlight";
 import { ArrowUpRightIcon, GitHubIcon, LinkedInIcon, MailIcon } from "@/components/icons";
@@ -148,6 +149,11 @@ export default function Home() {
               </div>
             </section>
 
+            <section id="ask" aria-label="Ask about me" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
+              <SectionHeading>Ask AI</SectionHeading>
+              <AskOscar />
+            </section>
+
             <section id="experience" aria-label="Work experience" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
               <SectionHeading>Experience</SectionHeading>
               <ol className="group/list space-y-12">
@@ -218,7 +224,7 @@ export default function Home() {
                           src={project.image}
                           alt=""
                           width={200}
-                          height={48}
+                          height={88}
                           className="z-10 rounded border-2 border-slate-200/10 transition group-hover:border-slate-200/30 sm:order-1 sm:col-span-2 sm:translate-y-1"
                         />
                       )}
