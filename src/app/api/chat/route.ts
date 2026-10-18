@@ -12,6 +12,23 @@ const RATE_MAX = 20; // requests per IP per window
 // so pair this with a monthly spend limit in the OpenAI dashboard.
 const hits = new Map<string, number[]>();
 
+// Flipped when OpenAI reports the spend limit is reached; the chat then stays off
+// for this instance. Set CHAT_ENABLED=false in Vercel to switch it off everywhere.
+let quotaExhausted = false;
+
+function chatStatus(): { enabled: boolean; reason?: "disabled" | "quota" } {
+  if (process.env.CHAT_ENABLED === "false" || !process.env.OPENAI_API_KEY) return { enabled: false, reason: "disabled" };
+  if (quotaExhausted) return { enabled: false, reason: "quota" };
+  return { enabled: true };
+}
+
+const offline = () =>
+  Response.json({ error: "The assistant is offline right now.", offline: true }, { status: 503 });
+
+export function GET() {
+  return Response.json(chatStatus(), { headers: { "Cache-Control": "no-store" } });
+}
+
 function isRateLimited(ip: string) {
   const now = Date.now();
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
@@ -39,8 +56,8 @@ const reply = (text: string, status: number) =>
   new Response(text, { status, headers: { "Content-Type": "text/plain; charset=utf-8" } });
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return reply("The assistant isn't configured yet.", 503);
+  if (!chatStatus().enabled) return offline();
+  const apiKey = process.env.OPENAI_API_KEY!;
 
   // Only accept requests coming from this site.
   const origin = req.headers.get("origin");
@@ -89,7 +106,13 @@ export async function POST(req: NextRequest) {
   });
 
   if (!upstream.ok || !upstream.body) {
-    console.error("OpenAI error", upstream.status, await upstream.text().catch(() => ""));
+    const body = await upstream.text().catch(() => "");
+    console.error("OpenAI error", upstream.status, body);
+    // Spend limit reached: turn the chat off.
+    if (upstream.status === 429 && /insufficient_quota|billing|budget/i.test(body)) {
+      quotaExhausted = true;
+      return offline();
+    }
     return reply("The assistant is unavailable right now. Please try again later.", 502);
   }
 

@@ -12,15 +12,38 @@ const suggestions = [
   "What AI products has he built?",
 ];
 
-export function AskOscar() {
+export function AskOscar({ email }: { email: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/chat")
+      .then((res) => res.json())
+      .then((status: { enabled: boolean }) => setEnabled(status.enabled))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
   }, [messages]);
+
+  if (!enabled) {
+    return (
+      <div className="rounded-lg border border-slate-800 bg-slate-800/30 p-4 text-sm sm:p-5">
+        <p>The AI assistant is offline right now.</p>
+        <p className="mt-2">
+          Have a question? Email me at{" "}
+          <a href={`mailto:${email}`} className="font-medium text-teal-300 hover:underline">
+            {email}
+          </a>{" "}
+          or check out my résumé below.
+        </p>
+      </div>
+    );
+  }
 
   async function send(text: string) {
     const question = text.trim();
@@ -40,6 +63,10 @@ export function AskOscar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: history }),
       });
+      if (res.status === 503) {
+        setEnabled(false);
+        return;
+      }
       if (!res.ok || !res.body) {
         setAnswer(await res.text());
         return;

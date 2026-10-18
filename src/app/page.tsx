@@ -151,7 +151,7 @@ export default function Home() {
 
             <section id="ask" aria-label="Ask about me" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
               <SectionHeading>Ask AI</SectionHeading>
-              <AskOscar />
+              <AskOscar email={links.email} />
             </section>
 
             <section id="experience" aria-label="Work experience" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
