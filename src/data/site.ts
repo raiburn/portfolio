@@ -1,6 +1,6 @@
 // All portfolio content lives here. Edit this file to update the site.
 
-export const siteUrl = "https://oscarruiz.dev";
+export const siteUrl = "https://www.oscarruiz.dev";
 
 export const profile = {
   name: "Oscar Ruiz",
