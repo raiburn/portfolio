@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { about, experience, profile, projects } from "@/data/site";
 import { AskOscar } from "@/components/AskOscar";
 import { RichText } from "@/components/RichText";
@@ -225,6 +226,14 @@ export default function Home() {
                           )}
                         </h3>
                         <p className="mt-2 text-sm leading-normal">{project.description}</p>
+                        {project.caseStudy && (
+                          <Link
+                            href={`/projects/${project.caseStudy}`}
+                            className="relative z-20 mt-2 inline-flex items-center text-sm font-medium text-teal-300 hover:text-teal-200"
+                          >
+                            Read the case study <span className="ml-1">→</span>
+                          </Link>
+                        )}
                         <Tags items={project.stack} />
                       </div>
                       {project.image && (

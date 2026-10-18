@@ -80,6 +80,7 @@ export type Project = {
   stack: string[];
   href?: string;
   image?: string; // e.g. "/projects/buildmyrig.png" (drop the file in /public)
+  caseStudy?: string; // slug in src/data/case-studies.ts
   status?: string;
 };
 
@@ -91,6 +92,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "Prisma", "PostgreSQL", "OpenAI API"],
     href: "https://buildmyrig.dev",
     image: "/projects/buildmyrig.jpg",
+    caseStudy: "buildmyrig",
   },
   {
     name: "ECommerce ChatBot",
