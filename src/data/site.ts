@@ -99,12 +99,15 @@ export const projects: Project[] = [
     description:
       "A RAG shopping assistant: catalog products are embedded into Supabase pgvector, each question is matched by similarity, and answers stream back grounded in what's actually for sale.",
     stack: ["Next.js", "Vercel AI SDK", "OpenAI", "pgvector"],
+    href: "https://github.com/raiburn/EComerceChatBot",
+    image: "/projects/ecommerce-chatbot.jpg",
   },
   {
     name: "Cambio Radar",
     description:
       "Compares bank USD/MXN rates against Banxico's FIX, ranks guaranteed-return options after tax and inflation, tracks a stock watchlist and emails alerts. It shows where to exchange for less; it doesn't predict prices.",
     stack: ["Next.js", "TypeScript"],
+    image: "/projects/cambio-radar.jpg",
   },
   {
     name: "ContratosRentaMX",
@@ -117,6 +120,7 @@ export const projects: Project[] = [
     description:
       "A Dokapon-style board game and JRPG hybrid with a chaptered world map, d20 combat, boss fights and AI opponents.",
     stack: ["Godot 4.5", "GDScript"],
+    image: "/projects/boardquest.jpg",
     status: "In progress",
   },
 ];
