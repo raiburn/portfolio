@@ -1,248 +1,250 @@
 import Image from "next/image";
-import { aiProjects, experience, profile, sideProjects, skills, type Project } from "@/data/site";
+import { Fragment } from "react";
+import { about, experience, profile, projects } from "@/data/site";
+import { SectionNav } from "@/components/SectionNav";
+import { Spotlight } from "@/components/Spotlight";
+import { ArrowUpRightIcon, GitHubIcon, LinkedInIcon, MailIcon } from "@/components/icons";
 
-const nav = [
-  { href: "#experience", label: "Experience" },
-  { href: "#ai", label: "AI work" },
-  { href: "#projects", label: "Projects" },
-  { href: "#contact", label: "Contact" },
-];
+// Renders **text** as highlighted text.
+function RichText({ text }: { text: string }) {
+  return text.split("**").map((part, i) =>
+    i % 2 ? (
+      <span key={i} className="font-medium text-slate-200">
+        {part}
+      </span>
+    ) : (
+      <Fragment key={i}>{part}</Fragment>
+    ),
+  );
+}
 
-function Section({
-  id,
-  eyebrow,
-  title,
-  children,
-}: {
-  id: string;
-  eyebrow: string;
-  title: string;
-  children: React.ReactNode;
-}) {
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  // Sticky label on small screens; hidden visually on large screens where the left nav takes over.
   return (
-    <section id={id} className="scroll-mt-24 border-t border-border py-16 sm:py-20">
-      <p className="font-mono text-xs uppercase tracking-widest text-accent">{eyebrow}</p>
-      <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      <div className="mt-10">{children}</div>
-    </section>
+    <div className="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-slate-900/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
+      <h2 className="text-sm font-bold uppercase tracking-widest text-slate-200 lg:sr-only">{children}</h2>
+    </div>
   );
 }
 
 function Tags({ items }: { items: string[] }) {
   return (
-    <ul className="flex flex-wrap gap-2">
+    <ul className="mt-3 flex flex-wrap" aria-label="Technologies used">
       {items.map((item) => (
-        <li
-          key={item}
-          className="rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted"
-        >
-          {item}
+        <li key={item} className="mr-1.5 mt-2">
+          <span className="flex items-center rounded-full bg-teal-400/10 px-3 py-1 text-xs font-medium leading-5 text-teal-300">
+            {item}
+          </span>
         </li>
       ))}
     </ul>
   );
 }
 
-function ProjectCard({ project, featured = false }: { project: Project; featured?: boolean }) {
-  return (
-    <article
-      className={`flex flex-col rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-accent/50 ${
-        featured ? "sm:p-8" : ""
-      }`}
+// Shared hover treatment: the hovered card lights up while its siblings dim.
+const cardClass =
+  "group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:group-hover/list:opacity-50 lg:hover:opacity-100!";
+const cardBackdrop =
+  "absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-md transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg";
+
+function CardTitle({ href, children }: { href?: string; children: React.ReactNode }) {
+  const inner = (
+    <>
+      <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block" />
+      <span>
+        {children}
+        {href && (
+          <ArrowUpRightIcon className="ml-1 inline-block size-4 shrink-0 translate-y-px transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 motion-reduce:transition-none" />
+        )}
+      </span>
+    </>
+  );
+  return href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className="inline-flex items-baseline font-medium leading-tight text-slate-200 hover:text-teal-300 focus-visible:text-teal-300 group-hover:text-teal-300"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className={`font-semibold tracking-tight ${featured ? "text-xl" : "text-lg"}`}>
-            {project.name}
-          </h3>
-          <p className="mt-0.5 text-sm text-accent">{project.tagline}</p>
-        </div>
-        {project.status && (
-          <span className="shrink-0 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">
-            {project.status}
-          </span>
-        )}
-      </div>
-      <p className="mt-4 leading-relaxed text-muted">{project.description}</p>
-      <ul className="mt-4 space-y-1.5 text-sm">
-        {project.highlights.map((h) => (
-          <li key={h} className="flex gap-2">
-            <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-accent" />
-            <span>{h}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-auto pt-6">
-        <Tags items={project.stack} />
-        {(project.href || project.repo) && (
-          <div className="mt-4 flex gap-4 text-sm font-medium">
-            {project.href && (
-              <a href={project.href} className="text-accent hover:underline">
-                Live ↗
-              </a>
-            )}
-            {project.repo && (
-              <a href={project.repo} className="text-accent hover:underline">
-                Code ↗
-              </a>
-            )}
-          </div>
-        )}
-      </div>
-    </article>
+      {inner}
+    </a>
+  ) : (
+    <span className="inline-flex items-baseline font-medium leading-tight text-slate-200 group-hover:text-teal-300">
+      {inner}
+    </span>
   );
 }
 
 export default function Home() {
   const { links } = profile;
+  const socials = [
+    { href: links.github, label: "GitHub", Icon: GitHubIcon },
+    { href: links.linkedin, label: "LinkedIn", Icon: LinkedInIcon },
+    { href: `mailto:${links.email}`, label: "Email", Icon: MailIcon },
+  ];
 
   return (
-    <>
-      <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-          <a href="#top" className="font-semibold tracking-tight">
-            {profile.name}
-          </a>
-          <nav className="hidden gap-6 text-sm text-muted sm:flex">
-            {nav.map((n) => (
-              <a key={n.href} href={n.href} className="hover:text-foreground">
-                {n.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
+    <div id="top" className="relative">
+      <Spotlight />
+      <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 font-sans leading-relaxed md:px-12 md:py-20 lg:px-24 lg:py-0">
+        <a
+          href="#content"
+          className="absolute left-0 top-0 block -translate-x-full rounded bg-teal-300 px-4 py-3 text-sm font-bold uppercase tracking-widest text-slate-900 focus-visible:translate-x-0"
+        >
+          Skip to content
+        </a>
 
-      <main id="top" className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Hero */}
-        <section className="grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[1fr_auto]">
-          <div>
-            <p className="font-mono text-sm text-accent">
-              {profile.role} · {profile.location}
-            </p>
-            <h1 className="mt-4 max-w-2xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-              {profile.headline}
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{profile.summary}</p>
-            <p className="mt-4 text-sm text-muted">{profile.workAuth}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#contact"
-                className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-90"
-              >
-                Get in touch
-              </a>
-              <a
-                href="#experience"
-                className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:border-foreground"
-              >
-                See my work
-              </a>
-              {links.resume && (
+        <div className="lg:flex lg:justify-between lg:gap-4">
+          {/* Left column */}
+          <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-[48%] lg:flex-col lg:justify-between lg:py-24">
+            <div>
+              <Image
+                src={profile.photo}
+                alt={profile.fullName}
+                width={80}
+                height={80}
+                priority
+                className="mb-6 size-20 rounded-full border-2 border-slate-700 object-cover"
+              />
+              <h1 className="text-4xl font-bold tracking-tight text-slate-200 sm:text-5xl">
+                <a href="#top">{profile.name}</a>
+              </h1>
+              <h2 className="mt-3 text-lg font-medium tracking-tight text-slate-200 sm:text-xl">
+                {profile.role}
+              </h2>
+              <p className="mt-4 max-w-xs leading-normal">{profile.tagline}</p>
+              <SectionNav />
+            </div>
+
+            <ul className="ml-1 mt-8 flex items-center" aria-label="Social media">
+              {socials.map(({ href, label, Icon }) => (
+                <li key={label} className="mr-5 shrink-0 text-xs">
+                  <a
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel="noreferrer noopener"
+                    aria-label={`${label} (opens in a new tab)`}
+                    title={label}
+                    className="block hover:text-slate-200"
+                  >
+                    <span className="sr-only">{label}</span>
+                    <Icon className="size-6" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </header>
+
+          {/* Right column */}
+          <main id="content" className="pt-24 lg:w-[52%] lg:py-24">
+            <section id="about" aria-label="About me" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
+              <SectionHeading>About</SectionHeading>
+              <div className="space-y-4">
+                {about.map((p) => (
+                  <p key={p}>
+                    <RichText text={p} />
+                  </p>
+                ))}
+              </div>
+            </section>
+
+            <section id="experience" aria-label="Work experience" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
+              <SectionHeading>Experience</SectionHeading>
+              <ol className="group/list space-y-12">
+                {experience.map((role) => (
+                  <li key={role.company}>
+                    <div className={cardClass}>
+                      <div className={cardBackdrop} />
+                      <header
+                        className="z-10 mb-2 mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2"
+                        aria-label={role.period}
+                      >
+                        {role.period}
+                      </header>
+                      <div className="z-10 sm:col-span-6">
+                        <h3>
+                          <CardTitle href={role.href}>
+                            {role.title} · {role.company}
+                          </CardTitle>
+                        </h3>
+                        {role.clients && <p className="mt-1 text-sm text-slate-500">Clients: {role.clients}</p>}
+                        <ul className="mt-2 space-y-2 text-sm leading-normal">
+                          {role.highlights.map((h) => (
+                            <li key={h}>{h}</li>
+                          ))}
+                        </ul>
+                        <Tags items={role.stack} />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-12">
                 <a
                   href={links.resume}
-                  className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:border-foreground"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="group inline-flex items-baseline font-semibold leading-tight text-slate-200"
                 >
-                  Résumé
+                  <span className="border-b border-transparent pb-px transition group-hover:border-teal-300 motion-reduce:transition-none">
+                    View Full Résumé
+                  </span>
+                  <ArrowUpRightIcon className="ml-1 inline-block size-4 shrink-0 translate-y-px transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 motion-reduce:transition-none" />
                 </a>
-              )}
-            </div>
-          </div>
-          <Image
-            src={profile.photo}
-            alt={profile.fullName}
-            width={224}
-            height={224}
-            priority
-            className="size-40 rounded-full border border-border object-cover sm:size-56"
-          />
-        </section>
-
-        <Section id="experience" eyebrow="Experience" title="Where I've shipped">
-          <ol className="space-y-12">
-            {experience.map((role) => (
-              <li key={role.company} className="grid gap-2 sm:grid-cols-[12rem_1fr] sm:gap-8">
-                <div>
-                  <h3 className="font-semibold">{role.company}</h3>
-                  <p className="font-mono text-xs text-muted">{role.period}</p>
-                </div>
-                <div>
-                  <p className="font-medium">{role.title}</p>
-                  {role.clients && <p className="text-sm text-accent">Clients: {role.clients}</p>}
-                  <ul className="mt-3 space-y-1.5 text-sm">
-                    {role.highlights.map((h) => (
-                      <li key={h} className="flex gap-2">
-                        <span aria-hidden className="mt-2 size-1 shrink-0 rounded-full bg-accent" />
-                        <span>{h}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Section>
-
-        <Section id="ai" eyebrow="AI products" title="What I've built on my own">
-          <div className="grid gap-6 md:grid-cols-2">
-            {aiProjects.map((p) => (
-              <ProjectCard key={p.name} project={p} featured />
-            ))}
-          </div>
-        </Section>
-
-        <Section id="projects" eyebrow="Projects" title="Other builds">
-          <div className="grid gap-6 md:grid-cols-2">
-            {sideProjects.map((p) => (
-              <ProjectCard key={p.name} project={p} />
-            ))}
-          </div>
-        </Section>
-
-        <Section id="skills" eyebrow="Toolbox" title="Skills">
-          <div className="grid gap-8 sm:grid-cols-2">
-            {skills.map((s) => (
-              <div key={s.group}>
-                <h3 className="mb-3 text-sm font-semibold">{s.group}</h3>
-                <Tags items={s.items} />
               </div>
-            ))}
-          </div>
-        </Section>
+            </section>
 
-        <Section id="contact" eyebrow="Contact" title="Let's work together">
-          <p className="max-w-xl text-lg leading-relaxed text-muted">
-            I&apos;m open to remote frontend and AI-integration roles and contract work. The fastest
-            way to reach me is email.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={`mailto:${links.email}`}
-              className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background hover:opacity-90"
-            >
-              {links.email}
-            </a>
-            <a
-              href={links.github}
-              className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:border-foreground"
-            >
-              GitHub ↗
-            </a>
-            <a
-              href={links.linkedin}
-              className="rounded-full border border-border px-5 py-2.5 text-sm font-medium hover:border-foreground"
-            >
-              LinkedIn ↗
-            </a>
-          </div>
-        </Section>
-      </main>
+            <section id="projects" aria-label="Selected projects" className="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
+              <SectionHeading>Projects</SectionHeading>
+              <ul className="group/list space-y-12">
+                {projects.map((project) => (
+                  <li key={project.name}>
+                    <div className={cardClass}>
+                      <div className={cardBackdrop} />
+                      <div className={`z-10 ${project.image ? "sm:order-2 sm:col-span-6" : "sm:col-span-8"}`}>
+                        <h3>
+                          <CardTitle href={project.href}>{project.name}</CardTitle>
+                          {project.status && (
+                            <span className="ml-2 align-middle text-xs font-medium text-slate-500">
+                              · {project.status}
+                            </span>
+                          )}
+                        </h3>
+                        <p className="mt-2 text-sm leading-normal">{project.description}</p>
+                        <Tags items={project.stack} />
+                      </div>
+                      {project.image && (
+                        <Image
+                          src={project.image}
+                          alt=""
+                          width={200}
+                          height={48}
+                          className="z-10 rounded border-2 border-slate-200/10 transition group-hover:border-slate-200/30 sm:order-1 sm:col-span-2 sm:translate-y-1"
+                        />
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-      <footer className="border-t border-border py-8">
-        <p className="mx-auto max-w-5xl px-4 text-sm text-muted sm:px-6">
-          © {new Date().getFullYear()} {profile.fullName}. Built with Next.js and Tailwind CSS.
-        </p>
-      </footer>
-    </>
+            <footer className="max-w-md pb-16 text-sm text-slate-500 sm:pb-0">
+              <p>
+                Built with Next.js and Tailwind CSS, deployed on Vercel. Layout inspired by{" "}
+                <a
+                  href="https://brittanychiang.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-medium text-slate-400 hover:text-teal-300"
+                >
+                  Brittany Chiang
+                </a>
+                .
+              </p>
+            </footer>
+          </main>
+        </div>
+      </div>
+    </div>
   );
 }
