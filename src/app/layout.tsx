@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { profile } from "@/data/site";
+import { profile, siteUrl } from "@/data/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,9 +14,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: `${profile.name} · ${profile.role}`,
   description: profile.tagline,
+  alternates: { canonical: "/" },
   openGraph: {
+    type: "website",
+    url: "/",
+    title: `${profile.name} · ${profile.role}`,
+    description: profile.tagline,
+    images: [profile.photo],
+  },
+  twitter: {
+    card: "summary",
     title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
     images: [profile.photo],

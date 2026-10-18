@@ -1,5 +1,7 @@
 // All portfolio content lives here. Edit this file to update the site.
 
+export const siteUrl = "https://oscarruiz.dev";
+
 export const profile = {
   name: "Oscar Ruiz",
   fullName: "Oscar Eduardo Ruiz Plascencia",
