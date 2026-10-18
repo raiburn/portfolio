@@ -29,7 +29,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "An AI PC builder that turns a budget and a list of games into a compatible, priced gaming PC. The LLM proposes the build; the database decides whether it's real.",
     role: "Solo: product, design, frontend, backend, AI and deployment",
-    period: "2025 — Present",
+    period: "March 2026 — Present",
     stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "pgvector", "OpenAI API", "Vercel"],
     live: "https://buildmyrig.dev",
     hero: { src: "/projects/buildmyrig/home.jpg", alt: "BuildMyRig AI homepage" },

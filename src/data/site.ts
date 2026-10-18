@@ -38,7 +38,7 @@ export const experience: Role[] = [
   {
     company: "BuildMyRig AI",
     title: "Independent Full Stack Engineer",
-    period: "2025 — Present",
+    period: "Mar 2026 — Present",
     href: "https://buildmyrig.dev",
     highlights: [
       "Designed and built an AI-powered PC builder SaaS from scratch: AI Build Generator, FPS Estimator, auth, user dashboard, admin panel and Amazon affiliate integration.",
