@@ -15,7 +15,7 @@ function profileText() {
   const roles = experience
     .map(
       (r) =>
-        `- ${r.title} at ${r.company} (${r.period})${r.clients ? `, clients: ${r.clients}` : ""}\n` +
+        `- ${r.title} at ${r.company} (${r.period})${r.clients ? `, clients: ${r.clients.map((c) => c.name).join(", ")}` : ""}\n` +
         r.highlights.map((h) => `  • ${h}`).join("\n") +
         `\n  Stack: ${r.stack.join(", ")}`,
     )

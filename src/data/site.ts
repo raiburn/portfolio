@@ -28,7 +28,7 @@ export type Role = {
   company: string;
   title: string;
   period: string;
-  clients?: string;
+  clients?: { name: string; href?: string }[];
   href?: string;
   highlights: string[];
   stack: string[];
@@ -50,7 +50,10 @@ export const experience: Role[] = [
     company: "Apex Systems",
     title: "Software Engineer",
     period: "2022 — 2026",
-    clients: "HC1 Healthcare · Duluth Trading Company",
+    clients: [
+      { name: "HC1 Healthcare", href: "https://hc1.com" },
+      { name: "Duluth Trading Company", href: "https://www.duluthtrading.com" },
+    ],
     highlights: [
       "Joined a greenfield healthcare platform from day one and helped define its frontend architecture: folder structure, reusable components, custom hooks, shared state and library selection.",
       "Introduced Cypress after the first development phase, built the initial E2E testing approach and helped the team grow coverage for demos and regression confidence.",
@@ -62,7 +65,7 @@ export const experience: Role[] = [
     company: "Enroute Systems",
     title: "Front End Developer",
     period: "2021 — 2022",
-    clients: "8x8 Cloud Communications",
+    clients: [{ name: "8x8 Cloud Communications", href: "https://www.8x8.com" }],
     highlights: [
       "Built internal marketing tools and a form builder that let 8x8's marketing teams create and manage campaign landing pages without engineering help.",
       "Created reusable components and integration flows that made internal tools more consistent and sped up delivery of new features.",

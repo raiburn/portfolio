@@ -173,7 +173,28 @@ export default function Home() {
                             {role.title} · {role.company}
                           </CardTitle>
                         </h3>
-                        {role.clients && <p className="mt-1 text-sm text-slate-500">Clients: {role.clients}</p>}
+                        {role.clients && (
+                          <p className="mt-1 text-sm text-slate-500">
+                            Clients:{" "}
+                            {role.clients.map((c, i) => (
+                              <span key={c.name}>
+                                {i > 0 && " · "}
+                                {c.href ? (
+                                  <a
+                                    href={c.href}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    className="relative z-20 text-slate-400 hover:text-teal-300 focus-visible:text-teal-300"
+                                  >
+                                    {c.name}
+                                  </a>
+                                ) : (
+                                  c.name
+                                )}
+                              </span>
+                            ))}
+                          </p>
+                        )}
                         <ul className="mt-2 space-y-2 text-sm leading-normal">
                           {role.highlights.map((h) => (
                             <li key={h}>{h}</li>
