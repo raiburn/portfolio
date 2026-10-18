@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { RichText } from "@/components/RichText";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -101,7 +102,7 @@ export function AskOscar({ email }: { email: string }) {
                 <button
                   type="button"
                   onClick={() => send(s)}
-                  className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:border-teal-300 hover:text-teal-300"
+                  className="rounded-full border border-slate-700 px-3 py-2 text-xs text-slate-300 sm:py-1 transition hover:border-teal-300 hover:text-teal-300"
                 >
                   {s}
                 </button>
@@ -120,7 +121,13 @@ export function AskOscar({ email }: { email: string }) {
                     : "text-slate-300"
                 }`}
               >
-                {m.content || <span className="animate-pulse text-slate-500">Thinking…</span>}
+                {!m.content ? (
+                  <span className="animate-pulse text-slate-500">Thinking…</span>
+                ) : m.role === "assistant" ? (
+                  <RichText text={m.content} />
+                ) : (
+                  m.content
+                )}
               </p>
             </div>
           ))}
@@ -142,9 +149,9 @@ export function AskOscar({ email }: { email: string }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           maxLength={MAX_CHARS}
-          placeholder="Ask about my experience…"
+          placeholder="Ask a question…"
           autoComplete="off"
-          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:border-teal-300 focus:outline-none"
+          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-900/60 px-3 py-2 text-base text-slate-200 placeholder:text-slate-500 sm:text-sm focus:border-teal-300 focus:outline-none"
         />
         <button
           type="submit"

@@ -1,23 +1,10 @@
 import Image from "next/image";
-import { Fragment } from "react";
 import { about, experience, profile, projects } from "@/data/site";
 import { AskOscar } from "@/components/AskOscar";
+import { RichText } from "@/components/RichText";
 import { SectionNav } from "@/components/SectionNav";
 import { Spotlight } from "@/components/Spotlight";
 import { ArrowUpRightIcon, GitHubIcon, LinkedInIcon, MailIcon } from "@/components/icons";
-
-// Renders **text** as highlighted text.
-function RichText({ text }: { text: string }) {
-  return text.split("**").map((part, i) =>
-    i % 2 ? (
-      <span key={i} className="font-medium text-slate-200">
-        {part}
-      </span>
-    ) : (
-      <Fragment key={i}>{part}</Fragment>
-    ),
-  );
-}
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   // Sticky label on small screens; hidden visually on large screens where the left nav takes over.
@@ -126,7 +113,7 @@ export default function Home() {
                     rel="noreferrer noopener"
                     aria-label={`${label} (opens in a new tab)`}
                     title={label}
-                    className="block hover:text-slate-200"
+                    className="-m-2.5 block p-2.5 hover:text-slate-200"
                   >
                     <span className="sr-only">{label}</span>
                     <Icon className="size-6" />
