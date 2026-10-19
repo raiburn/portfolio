@@ -92,6 +92,22 @@ export default async function CaseStudyPage({ params }: Props) {
                 </dd>
               </div>
             )}
+            {study.repo && (
+              <div>
+                <dt className="font-semibold text-slate-200">Code</dt>
+                <dd className="mt-1">
+                  <a
+                    href={study.repo}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="group inline-flex items-baseline text-teal-300 hover:text-teal-200"
+                  >
+                    GitHub
+                    <ArrowUpRightIcon className="ml-1 inline-block size-4 shrink-0 translate-y-px transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 motion-reduce:transition-none" />
+                  </a>
+                </dd>
+              </div>
+            )}
           </dl>
           <ul className="mt-6 flex flex-wrap" aria-label="Technologies used">
             {study.stack.map((item) => (
@@ -152,14 +168,14 @@ export default async function CaseStudyPage({ params }: Props) {
 
         <footer className="mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 pt-8">
           <BackLink />
-          {study.live && (
+          {(study.live || study.repo) && (
             <a
-              href={study.live}
+              href={study.live ?? study.repo}
               target="_blank"
               rel="noreferrer noopener"
               className="group inline-flex items-baseline font-semibold text-slate-200 hover:text-teal-300"
             >
-              Try {study.name}
+              {study.live ? `Try ${study.name}` : "View the code"}
               <ArrowUpRightIcon className="ml-1 inline-block size-4 shrink-0 translate-y-px transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 motion-reduce:transition-none" />
             </a>
           )}

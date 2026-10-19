@@ -101,6 +101,7 @@ export const projects: Project[] = [
     stack: ["Next.js", "Vercel AI SDK", "OpenAI", "pgvector"],
     href: "https://github.com/raiburn/EComerceChatBot",
     image: "/projects/ecommerce-chatbot.jpg",
+    caseStudy: "ecommerce-chatbot",
   },
   {
     name: "Cambio Radar",

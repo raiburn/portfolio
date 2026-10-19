@@ -17,6 +17,7 @@ export type CaseStudy = {
   period: string;
   stack: string[];
   live?: string;
+  repo?: string;
   hero: { src: string; alt: string };
   stats: { value: string; label: string }[];
   sections: CaseStudySection[];
@@ -114,6 +115,92 @@ export const caseStudies: CaseStudy[] = [
         heading: "What I'd do differently",
         paragraphs: [
           "I'd build the evals first. Adding them after the generator worked meant I was inferring quality from smoke tests instead of measuring it while tuning prompts. Next up: evals for recommendation quality (right parts, but is it a good build?), query expansion for ambiguous titles, and streaming responses for the chat.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "ecommerce-chatbot",
+    name: "ECommerce ChatBot",
+    summary:
+      "A shopping assistant for an outdoor gear store that answers from the real catalog, filters by price and category, and adds items to the cart. It only talks about shopping: everything else is filtered out before it reaches the assistant.",
+    role: "Solo: design, frontend, backend and AI",
+    period: "April 2026 · hardened October 2026",
+    stack: ["Next.js", "TypeScript", "Vercel AI SDK", "OpenAI API", "Supabase", "pgvector", "Tailwind CSS"],
+    repo: "https://github.com/raiburn/EComerceChatBot",
+    hero: {
+      src: "/projects/ecommerce-chatbot/chat.jpg",
+      alt: "ShopBot finding a rain jacket under $100 and adding it to the cart",
+    },
+    stats: [
+      { value: "15", label: "products across 8 categories, searched by meaning" },
+      { value: "3 tools", label: "the model can call: filter by price, filter by category, add to cart" },
+      { value: "2 layers", label: "keeping it on topic: a classifier, then a scoped prompt" },
+      { value: "8 / 8", label: "on- and off-topic test questions handled correctly" },
+    ],
+    sections: [
+      {
+        heading: "The problem",
+        paragraphs: [
+          "Store search boxes match keywords. A customer who types **“something to keep me dry on a hike”** gets nothing, because no product is called that. A chat assistant can understand the request, but a plain LLM will happily recommend products the store doesn't sell, at prices it made up.",
+          "I wanted an assistant that understands natural questions but can only recommend what's actually in the catalog, at the real price.",
+        ],
+      },
+      {
+        heading: "Grounding answers in the catalog",
+        paragraphs: [
+          "Each product's name, description and tags are turned into an embedding with OpenAI's **text-embedding-3-small** and stored in **Supabase with pgvector**. A question is embedded the same way and matched by cosine similarity in a single SQL function; the top 5 matches above a similarity threshold go into the prompt.",
+          "The prompt tells the model to use only those products and to say when the store doesn't carry something. Asked for kayaks, it answers that the store doesn't sell them instead of inventing one.",
+          "Follow-ups need context: “waterproof?” on its own matches nothing useful. So retrieval uses the **last three customer messages combined**, which keeps “jacket” in the search when the next question is “and in a smaller size?”.",
+        ],
+      },
+      {
+        heading: "From answers to actions: tool calling",
+        paragraphs: [
+          "Similarity search is good at meaning and bad at exact rules: “under $100” isn't something embeddings understand. So the model gets three tools through the Vercel AI SDK, and code does the exact part:",
+        ],
+        bullets: [
+          "**Filter by price:** an exact database query with optional min, max and category, so “waterproof jackets under $100” returns only jackets.",
+          "**Filter by category:** browse jackets, footwear, base layers and the rest.",
+          "**Add to cart:** when the customer says they want something. The result streams back to the UI and updates the cart, which keeps quantities and survives a page reload.",
+        ],
+      },
+      {
+        heading: "How a message is handled",
+        steps: [
+          "The API checks the request comes from the site itself, then applies a per-IP rate limit and limits on message length and conversation size.",
+          "A small classifier decides whether the message is about shopping. If not, a fixed reply goes back and nothing else runs.",
+          "The last three customer messages are embedded and matched against the catalog in Postgres.",
+          "gpt-4o-mini answers with the matching products in context, calling tools when it needs exact filters or the cart.",
+          "The reply streams from the edge, with product cards rendered from the tool results.",
+        ],
+      },
+      {
+        heading: "Keeping it on topic",
+        paragraphs: [
+          "An open chat box on a public site is a free AI for anyone who finds it: homework, code, essays, all billed to my OpenAI account. Instructions in the prompt help, but a determined user can talk past them.",
+          "So the assistant never sees off-topic requests. Every message first goes to a **small classifier** that reads it with the recent conversation, so short follow-ups like “add it” still count as shopping. Off-topic messages get a fixed reply, with no catalog search and no assistant call. Attempts to change the rules (“ignore your instructions and…”) are treated as off-topic too, even when mixed with a real question.",
+          "The assistant's prompt is scoped as a second layer, and replies are capped in length. In testing, it refused code, trivia, a prompt-injection attempt and an essay request disguised as a product question, and answered all four shopping questions, including a vague follow-up.",
+        ],
+        image: {
+          src: "/projects/ecommerce-chatbot/guard.jpg",
+          alt: "ShopBot declining a request to ignore its rules and write a Python script",
+          caption: "Off-topic requests get a fixed reply and never reach the assistant.",
+        },
+      },
+      {
+        heading: "Failing honestly",
+        paragraphs: [
+          "When the database went down, the first version didn't crash. It did something worse: the search quietly returned no products, and the assistant told customers **“we don't carry that”** about items that were in stock.",
+          "Now a catalog error is treated as an error, and the chat says the catalog is unavailable instead of giving a confident wrong answer. The endpoint that loads the catalog also had a gap: if its secret wasn't configured, it could be called without one. It now refuses.",
+          "Taking screenshots for this page turned up one more bug: the chat re-renders on every streamed word, and the cart was re-adding the same item each time. **One jacket became 38 items.** Each cart action is now counted exactly once.",
+        ],
+      },
+      {
+        heading: "What I'd do differently",
+        paragraphs: [
+          "I'd write tests from the start. The cart bug would have been caught by a single component test, and the topic filter deserves a real eval set instead of a handful of hand-checked questions.",
+          "With 15 products, vector search is more than the catalog needs; the design pays off with thousands of products. At that size I'd also move the rate limit to a shared store, since the current one is per server instance.",
         ],
       },
     ],
