@@ -5,7 +5,7 @@ export const siteUrl = "https://www.oscarruiz.dev";
 export const profile = {
   name: "Oscar Ruiz",
   fullName: "Oscar Eduardo Ruiz Plascencia",
-  role: "Senior Software Engineer",
+  role: "Software Engineer",
   tagline: "I build enterprise frontends, e-commerce experiences and AI-powered products.",
   photo: "/profile.jpg",
   links: {
