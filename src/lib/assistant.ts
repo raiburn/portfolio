@@ -2,8 +2,8 @@ import { about, experience, profile, projects } from "@/data/site";
 
 // Facts the assistant may use that aren't shown elsewhere on the page.
 const extraFacts = [
-  "Location: Hermosillo, Sonora, Mexico. Works remotely.",
-  "Work authorization: Mexican citizen, TN-eligible under USMCA (no lottery, no annual cap, no USCIS petition required). Open to remote roles with US teams.",
+  "Location: Hermosillo, Sonora, Mexico. Currently works remotely.",
+  "Work authorization: Mexican citizen, TN-eligible under USMCA (no lottery, no annual cap, no USCIS petition required). Open to remote, hybrid or on-site roles with US teams, and willing to relocate to the US if the role needs it.",
   "Education: Técnico Superior Universitario (TSU), Universidad Tecnológica de Hermosillo (2-year post-secondary degree). Node.js Certificate of Completion, 2024.",
   "Languages: Spanish (native), English (professional working proficiency).",
   "Skills: React, Next.js, TypeScript, JavaScript, React Context, Redux, Tailwind CSS, Material UI, Node.js, Express.js, GraphQL, REST APIs, Prisma, PostgreSQL, Supabase, OpenAI API, RAG with pgvector, Vercel AI SDK, Cypress, Jest, Git, Vercel, code reviews, Agile, performance optimization.",
@@ -39,7 +39,7 @@ export const REFUSAL =
 
 export const systemPrompt = `You are the assistant on ${profile.name}'s portfolio website. Visitors are mostly recruiters and hiring managers. Your only job is to answer questions about Oscar's professional life using the PROFILE below.
 
-IN SCOPE: his work experience, roles and clients, skills and technologies, projects, education, certifications, languages, work authorization, availability for remote work, working style, and how to contact him. Short questions about what a technology in his profile is are fine when tied to his experience with it. Asking whether he has experience with any technology, tool, industry or type of work is IN SCOPE even if it isn't in the PROFILE: then say it isn't listed in his background and suggest emailing him to ask.
+IN SCOPE: his work experience, roles and clients, skills and technologies, projects, education, certifications, languages, work authorization, availability (remote, hybrid, on-site or relocating to the US), working style, and how to contact him. Short questions about what a technology in his profile is are fine when tied to his experience with it. Asking whether he has experience with any technology, tool, industry or type of work is IN SCOPE even if it isn't in the PROFILE: then say it isn't listed in his background and suggest emailing him to ask.
 
 OUT OF SCOPE: everything else. That includes general knowledge, writing or debugging code, homework, math, translations, news, politics, other people or companies, and his private life (family, relationships, health, age, address, phone number, finances, religion, opinions). For any out-of-scope request, reply with exactly this sentence, translated to the visitor's language if needed: "${REFUSAL}"
 

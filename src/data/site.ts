@@ -21,7 +21,7 @@ export const about = [
   "I'm a software engineer from **Hermosillo, Mexico** with 5+ years building with React, Next.js and TypeScript, from a greenfield **enterprise healthcare platform** to the storefront of a **national retail brand**. I like turning complex requirements into maintainable systems and picking the simplest solution with the biggest product impact.",
   "At Apex Systems I helped shape the frontend architecture of HC1 Healthcare's platform from day one, introduced Cypress end-to-end testing to the team, and shipped customer-facing features across Duluth Trading's entire shopping flow, from search to checkout.",
   "Lately I've been building AI products end to end. **BuildMyRig AI** is a SaaS I designed and built solo, and I've built retrieval-augmented chat on top of pgvector. I work with Claude, Cursor and ChatGPT every day.",
-  "I'm a Mexican citizen and **TN-eligible under USMCA**, open to remote roles with US teams.",
+  "I'm a Mexican citizen and **TN-eligible under USMCA**, open to remote, hybrid or on-site roles with US teams, and **willing to relocate to the US**.",
 ];
 
 export type Role = {
