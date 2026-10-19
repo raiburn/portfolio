@@ -23,13 +23,11 @@ export const metadata: Metadata = {
     url: "/",
     title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
-    images: [profile.photo],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${profile.name} · ${profile.role}`,
     description: profile.tagline,
-    images: [profile.photo],
   },
 };
 
